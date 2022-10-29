@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW 6: Business Search</title>
+
+    <style>
+        /****************HEADER********************/
+        body {
+            background-color: rgba(221, 221, 221, 0.874);
+        }
+
+        .header_image {
+            background-image: url("/static/banner.jpeg");
+
+            height: 125px;
+            width: 600px;
+
+            background-position: bottom;
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header_text {
+            position: relative;
+            top: 26px;
+            left: 33px;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .header_text p {
+            font-size: 16px;
+        }
+
+        /****************SEARCH FORM********************/
+        #search {
+            width: 600px;
+            height: 400px;
+            margin-right: auto;
+            margin-left: auto;
+            background-color: white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        #search form {
+            margin-right: 40px;
+            margin-left: 40px;
+            background-color: white;
+            font-family: Helvetica;
+
+            padding: 20px 0px;
+            border-radius: 5px;
+        }
+
+        #search hr {
+            color: rgba(27, 56, 146, 0.716);
+            width: 100%;
+            margin: 12px auto;
+        }
+
+
+        #search label {
+            color: rgba(27, 56, 146, 0.716);
+            position: relative;
+            display: block;
+            text-align: left;
+        }
+
+        .flex {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        #search input {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+
+        input[type=text] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #location_checkbox {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #search select {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 3px;
+            width: 170%;
+
+            height: 30px;
+        }
+
+        #search input,
+        select {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        #search .search-required:after {
+            content: " *";
+            color: red;
+        }
+
+        #search_button {
+            background-color: rgba(27, 56, 146, 0.716);
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-bottom: 5px solid rgba(27, 56, 146, 0.716);
+        }
+
+        #clear_button {
+            background-color: rgb(255, 188, 3);
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-bottom: 5px solid orange;
+        }
+
+        #search_button:hover,
+        #clear_button:hover {
+            filter: brightness(90%);
+            cursor: pointer;
+        }
+
+        input[disabled] {
+            background-color: rgb(235, 231, 231);
+        }
+
+        /****************SEARCH RESULT********************/
+        #search_result {
+
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            visibility: hidden;
+        }
+
+        #search_result table {
+            background-color: white;
+            table-layout: fixed;
+            width: 85%;
+            border-collapse: collapse;
+            margin: 100px auto;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        #search_result td {
+            text-align: center;
+            font-family: Helvetica;
+            font-size: 14px;
+            vertical-align: middle;
+
+            height: 100px;
+            background-position: center;
+            background-size: contain;
+            border: 1px solid gainsboro;
+        }
+
+        #search_result img {
+            height: 100px;
+            width: 100px;
+        }
+
+        #search_result th {
+            padding: 10px;
+            border: 1px solid lightslategray;
+            color: black;
+            background-color: rgba(27, 56, 146, 0.716);
+
+            font-family: Helvetica;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        #search_result th:nth-child(1) {
+            width: 5%;
+        }
+
+        #search_result th:nth-child(2) {
+            width: 10%;
+        }
+
+        #search_result th:nth-child(3) {
+            width: 40%;
+        }
+
+        #search_result th:nth-child(4) {
+            width: 15%;
+        }
+
+        #search_result th:nth-child(5) {
+            width: 15%;
+        }
+
+        #search_result th,
+        td,
+        tbody,
+        tr {
+            text-align: center;
+        }
+
+        #search_result a:link {
+            color: black;
+            text-decoration: none;
+        }
+
+        #search_result a:hover {
+            color: gray;
+        }
+
+        #business_name:hover {
+            cursor: pointer;
+        }
+
+        /****************DETAILED SEARCH RESULT********************/
+        .container {
+            height: 900px;
+            background-color: white;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+            font-family: Hevletica;
+            margin-left: auto;
+            margin-right: auto;
+            visibility: hidden;
+        }
+
+        .container hr {
+            width: 95%;
+            color: #F4F3F4;
+        }
+
+        #detailed_header {
+            padding-top: 20px;
+            overflow: hidden;
+            font-size: 24px;
+            font-family: Helvetica;
+
+        }
+
+        .wrapper2 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+
+        .wrapper {
+            text-align: left;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background-color: white;
+            color: black;
+            padding: 1em;
+            height: 79px;
+            margin: 5px 2px;
+        }
+
+        .card h2 {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            font-family: Helvetica;
+        }
+
+        .card p {
+            font-family: Helvetica;
+        }
+
+        .img_card {
+            width: 280px;
+            height: 295px;
+            margin: 5px auto;
+            position: relative;
+
+            border-style: solid;
+            border-width: 2px;
+            object-fit: contain;
+
+        }
+
+        .img_card img {
+            max-width: 100%;
+            max-height: 200px;
+            min-width: 100%;
+        }
+
+        #photo-text {
+            bottom: 0;
+            position: absolute;
+            right: 40%;
+            font-family: Helvetica;
+
+        }
+
+
+        #detailed_search_result {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #open {
+            border-radius: 15px;
+            background: green;
+            padding: 10px;
+            width: 50px;
+            height: 20px;
+            text-align: center;
+            font-family: Helvetica;
+        }
+
+        #closed {
+            border-radius: 15px;
+            background: red;
+            padding: 10px;
+            width: 50px;
+            height: 18px;
+            text-align: center;
+            font-family: Helvetica;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header_image">
+        <div class=header_text>
+            <h3>Business Search</h3>
+            <p>Fill out the form to get businesses near you!</p>
+        </div>
+    </div>
+
+    <div id="search">
+        <form id="search_form" onsubmit="search(event)">
+            <label class="search-required">Keyword</label>
+
+            <input type="text" name="search_input_term" id="search_input_term" required>
+
+
+            <div class="flex">
+                <div class="input_distance">
+                    <label>Distance (miles)</label>
+                    <input type="number" step="0.01" name="search_input_radius" id="search_input_radius"
+                        placeholder="10">
+
+                    <input type="hidden" name="converted_search_input_radius" id="converted_search_input_radius">
+                </div>
+                <div class="select_category">
+                    <label>Category</label>
+
+                    <select type="text" name="search_select_category" id="search_select_category" required>
+                        <option value="All" selected>Default</option>
+                        <option value="arts">Arts & Entertainment</option>
+                        <option value="food">Food</option>
+                        <option value="health">Health & Medical</option>
+                        <option value="hotelstravel">Hotels & Travel</option>
+                        <option value="professional">Professional Services</option>
+                    </select>
+                </div>
+
+                <br style="clear:both;" />
+            </div>
+
+            <section>
+                <label class="search-required">Location</label>
+
+                <input type="text" name="search_input_location" id="search_input_location" required>
+
+                <input type="hidden" name="search_location_latitude" id="search_location_latitude">
+                <input type="hidden" name="search_location_longitude" id="search_location_longitude">
+            </section>
+
+            <hr>
+
+            <label>Want us to auto-detect your location? Check here
+                <input type="checkbox" name="location_checkbox" id="location_checkbox"
+                    onclick="disable_input_location()" />
+            </label>
+            <br>
+
+
+            </a><button type="submit" id="search_button" value="Search">Submit</button>
+            <button type="reset" id="clear_button" value="Clear" onclick="onclick_clear()">Clear</button>
+        </form>
+        <br>
+    </div>
+    <div id='search_result'>
+        <table id="search_result_table"></table>
+    </div>
+
+    <div class="container" id='detailed_search_result'>
+
+    </div>
+
+</body>
+
+<footer id="debug">
+
+</footer>
+
+<script>
+    const GoogleMapApiKey = "AIzaSyCV1mIVJZQ50V3vL04kbHrecUhxsfEDm6o";
+
+    function disable_input_location() {
+        if (document.getElementById("location_checkbox").checked) {
+            search_input_location.value = '';
+            document.getElementById("search_input_location").disabled = true;
+
+        }
+        else {
+            document.getElementById("search_input_location").disabled = false;
+            document.getElementById('search_location_latitude').value = "";
+            document.getElementById('search_location_longitude').value = "";
+        }
+    }
+
+    function milesToMeters() {
+        let meters = document.getElementById('search_input_radius').value * 1609.34;
+        meters = Math.round(meters);
+        meters = parseInt(meters);
+
+        document.getElementById('converted_search_input_radius').value = meters;
+        console.log(document.getElementById('converted_search_input_radius').value);
+
+    }
+
+    function onclick_clear() {
+        //clear all search results  
+        document.getElementById('search_result').style.visibility = 'hidden';
+        document.getElementById('search_result_table').innerHTML = '';
+
+        //clear form 
+        document.getElementById('search_input_term').value = '';
+        document.getElementById('search_input_location').value = '';
+        document.getElementById('search_input_radius').value = '';
+        document.getElementById('search_select_category').value = 'default';
+        document.getElementById("search_input_location").disabled = false;
+
+        //clear detailed search card 
+        document.getElementById('detailed_search_result').innerHTML = '';
+        document.getElementById('detailed_search_result').style.visibility = 'hidden';
+
+    }
+
+    function clear_results() {
+        //clear all search results  
+        document.getElementById('search_result_table').innerHTML = '';
+
+        //clear detailed search card 
+        document.getElementById('detailed_search_result').innerHTML = '';
+        document.getElementById('detailed_search_result').style.visibility = 'hidden';
+    }
+
+    function search(event) {
+        event.preventDefault();
+        clear_results();
+
+        var term = document.getElementById("search_input_term").value;
+        var category = document.getElementById("search_select_category").value;
+        var radius = document.getElementById("search_input_radius").value;
+
+        if (!document.getElementById("location_checkbox").checked) {
+            // call google map api to geocode location
+            //return latitude and longitude
+            var googleGeoApi_base_url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCV1mIVJZQ50V3vL04kbHrecUhxsfEDm6o&address="
+            var location = document.getElementById("search_input_location").value;
+            console.log(location)
+            googleGeoApi_base_url += location
+            var response = fetch(googleGeoApi_base_url)
+            response.then(res => res.json())
+                .then(function (geo_data) {
+                    if (geo_data["results"].length == 0 || geo_data["results"][0] == undefined) {
+                        alert("Address is invalid please try again");
+                    } else {
+                        console.log("res:", geo_data)
+                        var latitude = geo_data["results"][0]["geometry"]["location"]["lat"]
+                        var longitude = geo_data["results"][0]["geometry"]["location"]["lng"]
+                        console.log("geo:", latitude, longitude)
+
+                        document.getElementById("search_location_latitude").value = latitude;
+                        document.getElementById("search_location_longitude").value = longitude;
+
+                        var radius = document.getElementById("search_input_radius").value;
+                        if (radius == '') {
+                            radius = 10 * 1609.34;
+                            radius = Math.round(radius);
+                            radius = parseInt(radius);
+                        } else {
+                            radius = radius * 1609.34;
+                            radius = Math.round(radius);
+                            radius = parseInt(radius);
+                        }
+
+                        request_backend_GET(latitude, longitude)
+                    }
+
+                })
+                .catch(error => {
+                    if (typeof error.json === "function") {
+                        error.json().then(jsonError => {
+                            console.log("Json error from API");
+                            console.log(jsonError);
+                        }).catch(genericError => {
+                            console.log("Generic error from API");
+                            console.log(error.statusText);
+                        });
+                    } else {
+                        console.log("Fetch error");
+                        console.log(error);
+                    }
+                });
+        }
+        else {
+            geo_url = "https://ipinfo.io/?token=e192fe79b9d3e7"
+            var responsePromise = fetch(geo_url);
+            responsePromise
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (geoData) {
+                    var location = geoData["loc"]
+                    var location_lat = location.substring(0, location.indexOf(','))
+                    var location_log = location.substring(location.indexOf(',') + 1, location.length)
+                    var latitude = location_lat
+                    var longitude = location_log
+                    console.log(latitude, longitude)
+
+                    //convert radius from miles to meters
+                    var radius = document.getElementById("search_input_radius").value;
+                    if (radius == '') {
+                        radius = 5 * 1609.34;
+                        radius = Math.round(radius);
+                        radius = parseInt(radius);
+                    } else {
+                        radius = radius * 1609.34;
+                        radius = Math.round(radius);
+                        radius = parseInt(radius);
+                    }
+
+                    document.getElementById("search_location_latitude").value = latitude;
+                    document.getElementById("search_location_longitude").value = longitude;
+
+                    request_backend_GET(latitude, longitude)
+                });
+        }
+    }
+
+    function request_backend_GET(latitude, longitude) {
+        var backend_url = "/search?";
+        //var backend
+
+        var term = document.getElementById("search_input_term").value;
+        var latitude = document.getElementById("search_location_latitude").value;
+        var longitude = document.getElementById("search_location_longitude").value;
+        var category = document.getElementById("search_select_category").value;
+        var radius = document.getElementById("search_input_radius").value;
+        if (radius == '') {
+            radius = 5 * 1609.34;
+            radius = Math.round(radius);
+            radius = parseInt(radius);
+        } else {
+            radius = radius * 1609.34;
+            radius = Math.round(radius);
+            radius = parseInt(radius);
+        }
+
+        backend_url += "term=" + term
+        backend_url += "&latitude=" + latitude
+        backend_url += "&longitude=" + longitude
+        backend_url += "&categories=" + category
+        backend_url += "&radius=" + radius
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log("response received");
+
+                // remove all the old <tr>
+                clear_results();
+
+                // set # of result cards to load
+                var card_to_load = 20;
+
+                // add retrived results
+                var json_obj = JSON.parse(this.response);
+                console.log(json_obj)
+
+                var table_items = '<tbody>' +
+                    '<th = ><b>No.</b></th>' +
+                    '<th><b>Image</b></th>' +
+                    '<th><b>Business Name</b></th>' +
+                    '<th><b>Rating</b></th>' +
+                    '<th><b>Distance (miles)</b></th>';
+
+                for (var i = 0; i < (json_obj.businesses.length); i++) {
+                    if (card_to_load <= 0) break;
+
+                    var count = i + 1;
+
+                    if (json_obj.businesses[i]['distance'] !== undefined || json_obj.businesses[i]['distance'] !== "") {
+                        var distance_miles = json_obj.businesses[i]['distance'] * 0.000621371;
+                        distance_miles = parseFloat(distance_miles).toFixed(2)
+                    } else {
+                        distance_miles = "N/A"
+                    }
+
+
+                    var table_item = '<tr>' +
+                        '<td>' + count + '</td>' +
+                        '<td>' + '<img src= ' + json_obj.businesses[i]['image_url'] + '>' + '</td>' +
+                        '<td id = "business_name" onclick = load_detailed_card("' + json_obj.businesses[i]['id'] + '");location.href="#detailed_search_result">' +
+                        json_obj.businesses[i]['name'] + '</td>' +
+                        '<td>' + json_obj.businesses[i]['rating'] + '</td>' +
+                        '<td>' + distance_miles + '</td>' +
+                        '</tr>';
+
+                    table_items += table_item;
+                    card_to_load--;
+                }
+
+                table_items += '</tbody>';
+
+                document.getElementById('search_result_table').innerHTML = table_items;
+
+                const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+                //create sorting functionality in new table 
+                const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+                    v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+                )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+                // do the work...
+                document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+                    const table = th.closest('table');
+                    Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+                        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+                        .forEach(tr => table.appendChild(tr));
+                })));
+
+                const element = document.getElementById('search_result_table');
+                document.getElementById('search_result').style.visibility = 'visible';
+                element.scrollIntoView();
+
+            } else {
+
+            }
+        }
+        xhttp.open("GET", backend_url, true)
+        xhttp.send();
+    }
+
+    function load_detailed_card(id) {
+        event.preventDefault();
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                //clear old cards 
+                document.getElementById('detailed_search_result').innerHTML = '';
+
+                var json_obj = JSON.parse(this.response);
+
+                var is_open = "<p id = 'open'> Open </p>";
+                if (json_obj['is_closed'] === true) {
+                    is_open = "<p id = 'closed'> Closed </p>";
+                }
+
+                //constructing display address string
+                var display_address_string = "";
+                var address_card = "";
+
+                if (json_obj['location'].display_address == undefined || json_obj['location'].display_address == "") {
+                    address_card = "";
+                } else {
+                    display_address_array = json_obj['location'].display_address;
+                    for (let i in display_address_array) {
+                        if ((i - 1) == display_address_array.length) {
+                            display_address_string += display_address_array[i];
+                        } else {
+                            display_address_string += display_address_array[i] + " ";
+                        }
+                    }
+                    address_card = '<div class="card">' +
+                        '<h2>Address</h2>' +
+                        '<p>' + display_address_string + '</p>' + '</div>';
+                }
+
+                //constructing display categories string 
+                var display_categories_array = json_obj['categories'];
+                var display_categories_string = "";
+                var category_card = "";
+
+                if (display_categories_array == undefined || display_categories_array.length == 0) {
+                    category_card = "";
+                } else {
+                    for (let i = 0; i < display_categories_array.length; i++) {
+                        if (display_categories_array.length - i == 1) {
+                            display_categories_string += display_categories_array[i].title;
+                        } else {
+                            display_categories_string += display_categories_array[i].title + " | ";
+                        }
+                    }
+                    category_card = '<div class="card">' +
+                        '<h2>Category</h2>' +
+                        '<p>' + display_categories_string + '</p>' + '</div>';
+                }
+
+                //check if transaction exists
+                var transaction_array = json_obj["transactions"];
+                var transaction_string = "";
+                var transaction_card = "";
+                if (transaction_array == undefined || transaction_array.length == 0) {
+                    transaction_card = "";
+                } else {
+                    for (let i = 0; i < transaction_array.length; i++) {
+                        if (transaction_array.length - i == 1) {
+                            transaction_string += transaction_array[i];
+                        } else {
+                            transaction_string += transaction_array[i] + " | ";
+                        }
+                    }
+                    transaction_card = '<div class="card">' +
+                        '<h2>Transactions Supported</h2>' +
+                        '<p>' + transaction_string + '</p>' + '</div>';
+                }
+
+                //check if price exists 
+                var price_string = "";
+                var price_card = "";
+                if (json_obj['price'] == undefined || json_obj['price'] == "") {
+                    price_card = "";
+                } else {
+                    price_string = json_obj['price'];
+                    price_card = '<div class="card">' +
+                        '<h2>Price</h2>' +
+                        '<p>' + price_string + '</p>' + '</div>';
+                }
+
+                //check if phone number exists
+                var phone_string = "";
+                var phone_card = "";
+                if (json_obj['display_phone'] == undefined || json_obj['display_phone'] == "") {
+                    phone_card = "";
+                } else {
+                    phone_string = json_obj['display_phone']
+                    phone_card = '<div class="card">' +
+                        '<h2>Phone Number</h2>' +
+                        '<p>' + phone_string + '</p>' + '</div>'
+                }
+
+                var detailed_result_card = '<h2 id="detailed_header">' +
+                    json_obj['name'] + '</h2>' + '<hr>' +
+                    '<div class="wrapper">' +
+
+                    '<div class="card">' +
+                    '<h2>Status</h2>' +
+                    '<p>' + is_open + '</p>' + '</div>' +
+
+                    category_card +
+
+                    address_card +
+
+                    phone_card +
+
+                    transaction_card +
+
+                    price_card +
+
+                    '<div class="card">' +
+                    '<h2>More Info</h2>' +
+                    '<a href = "' + json_obj['url'] + '" target="_blank">Yelp</a>' + '</div>' +
+                    '</div>' +
+
+                    '<div class="wrapper2">' +
+                    '<div class="img_card">' + '<img src= ' + json_obj['photos'][0] + '>' +
+                    '<h3 id = "photo-text">Photo 1</h3>' + '</div>' +
+                    '<div class="img_card">' + '<img src= ' + json_obj['photos'][1] + '>' +
+                    '<h3 id = "photo-text">Photo 2</h3>' + '</div>' +
+                    '<div class="img_card">' + '<img src= ' + json_obj['photos'][2] + '>' +
+                    '<h3 id = "photo-text">Photo 3</h3>' + '</div>' +
+                    '</div>'
+
+            }
+
+            document.getElementById('detailed_search_result').innerHTML = detailed_result_card;
+            document.getElementById('detailed_search_result').style.visibility = "visible";
+
+        }
+        xhttp.open("GET", '/detailed_search/' + id, true);
+        xhttp.send();
+    }
+
+
+</script>
+
+</html>
